@@ -5,15 +5,22 @@ from pygame.locals import *
 RED = (255, 0, 0)
 WHITE = (255, 255, 255)
 
+GRAVITY = 60
+
+clock=pygame.time.Clock()
+
 
 class Wheel(pygame.sprite.Sprite):
     def __init__(self, radius: int, position: tuple[int, int]):
         super().__init__()
-        self.x_cord, self.y_cord = position
+        self.y_velocity: float = 0
         self.radius = radius
         self.image = pygame.Surface([2*radius, 2*radius])
         self.image.fill(WHITE)
         self.image.set_colorkey(WHITE)
+        self.rect = self.image.get_rect()
+        self.x_cord: float = float(position[0])
+        self.y_cord: float = float(position[1])
         pygame.draw.circle(
             self.image,
             RED,
@@ -21,15 +28,14 @@ class Wheel(pygame.sprite.Sprite):
             self.radius,
             width = 0)
 
-        self.rect = self.image.get_rect()
-        self.radius = 5
+    def update(self, dt: float):
+        self.y_velocity += GRAVITY * dt
+        self.y_cord += self.y_velocity * dt
+        # print(f'{self.y_cord=}')
 
-    def update(self):
-        self.y_cord += 1
-        if self.rect.centery:
-            self.rect.y = 0
-        self.rect.move_ip(0, 1)
-
+        if self.y_cord > 300:
+            self.y_velocity = -100
+        self.rect.y = int(self.y_cord)
 
 
 class Supsension(pygame.sprite.Group):
@@ -58,8 +64,8 @@ class App:
         if event.type == pygame.QUIT:
             self._running = False
 
-    def on_loop(self):
-        self._sprites.update()
+    def on_loop(self, dt):
+        self._sprites.update(dt=dt)
 
     def on_render(self):
         self._display_surf.fill(WHITE)
@@ -72,9 +78,10 @@ class App:
     def on_execute(self):
         self.on_init()
         while self._running:
+            dt = clock.tick(60) / 1000
             for event in pygame.event.get():
                 self.on_event(event)
-            self.on_loop()
+            self.on_loop(dt=dt)
             self.on_render()
         self.on_cleanup()
 
