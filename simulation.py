@@ -32,14 +32,10 @@ class App:
 
     def on_init(self):
         pygame.init()
-        self._display_surf = pygame.display.set_mode(
-            self.size, pygame.HWSURFACE | pygame.DOUBLEBUF
-        )
+        self._display_surf = pygame.display.set_mode(self.size, pygame.HWSURFACE | pygame.DOUBLEBUF)
         self._suspension = Supsension()
         self._obstacles = pygame.sprite.Group()
-        self._sprites = pygame.sprite.Group(
-            self._suspension,
-            self._obstacles)
+        self._sprites = pygame.sprite.Group(self._suspension, self._obstacles)
         self._running = True
 
     def on_event(self, event):
@@ -50,7 +46,7 @@ class App:
         self._sprites.update(dt=dt)
         self._suspension._wheel.collide(self._obstacles)
 
-        if randint(0, 100) == 0:
+        if randint(0, 100) < 3:
             bump = Bump((640, 350), 75)
             self._sprites.add(bump)
             self._obstacles.add(bump)

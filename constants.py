@@ -3,4 +3,4 @@ BLUE = (50, 255, 50)
 BLACK = (0, 0, 0)
 WHITE = (255, 255, 255)
 
-GRAVITY = 50
+GRAVITY = 300

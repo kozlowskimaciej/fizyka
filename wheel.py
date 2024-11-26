@@ -1,8 +1,10 @@
+from math import sqrt
 from typing import Iterable
 import pygame
 
 import constants
 from spring import Spring
+from utils import change_abs_value
 
 
 class Wheel(pygame.sprite.Sprite):
@@ -17,6 +19,9 @@ class Wheel(pygame.sprite.Sprite):
 
         self.x_cord: float = float(position[0])
         self.y_cord: float = float(position[1])
+        self.mass = 5
+
+        self.collision = True
 
         self.spring: None | Spring = None
 
@@ -29,7 +34,8 @@ class Wheel(pygame.sprite.Sprite):
         )
 
     def update(self, dt: float):
-        self.y_velocity += constants.GRAVITY * dt
+        acceleration = constants.GRAVITY + self.spring.force / self.mass
+        self.y_velocity += acceleration * dt
         self.y_cord += self.y_velocity * dt
 
         # Prevent spring from stretching more that max_length
@@ -43,6 +49,10 @@ class Wheel(pygame.sprite.Sprite):
         elif self.y_cord > 300:
             self.y_velocity = max(self.y_velocity, 0)
             self.y_cord = 300
+        # Prevent from going above the body
+        # elif not self.on_ground and self.spring.is_min:
+        #     self.y_cord = self.spring.other_attachment(self).attachment.y + self.spring.min_length
+        #     self.y_velocity = max(self.y_velocity, self.spring.other_attachment(self).y_velocity)
         self.rect.y = int(self.y_cord)
 
     def collide(self, others: Iterable[pygame.sprite.Sprite]) -> bool:
@@ -52,10 +62,12 @@ class Wheel(pygame.sprite.Sprite):
                 self.rect.y -= 1
                 y_diff += 1
 
-        if y_diff:
+        self.collision = bool(y_diff)
+
+        if self.collision:
             if self.y_velocity > 0:
                 self.y_velocity = 0
-            self.y_velocity = -y_diff*40
+            self.y_velocity = -y_diff * 40
 
     @property
     def attachment(self) -> pygame.Vector2:
@@ -63,4 +75,4 @@ class Wheel(pygame.sprite.Sprite):
 
     @property
     def on_ground(self) -> bool:
-        return self.y_cord > 299
+        return self.collision or self.y_cord > 299
