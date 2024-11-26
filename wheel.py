@@ -1,3 +1,4 @@
+from typing import Iterable
 import pygame
 
 import constants
@@ -43,6 +44,18 @@ class Wheel(pygame.sprite.Sprite):
             self.y_velocity = max(self.y_velocity, 0)
             self.y_cord = 300
         self.rect.y = int(self.y_cord)
+
+    def collide(self, others: Iterable[pygame.sprite.Sprite]) -> bool:
+        y_diff = 0
+        for other in others:
+            while pygame.sprite.collide_mask(self, other):
+                self.rect.y -= 1
+                y_diff += 1
+
+        if y_diff:
+            if self.y_velocity > 0:
+                self.y_velocity = 0
+            self.y_velocity = -y_diff*40
 
     @property
     def attachment(self) -> pygame.Vector2:

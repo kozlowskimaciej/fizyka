@@ -1,3 +1,4 @@
+from random import randint
 import pygame.rect
 import pygame
 from pygame.locals import *
@@ -5,6 +6,7 @@ from pygame.locals import *
 from body import Body
 from spring import Spring
 from wheel import Wheel
+from obstacles import Bump
 
 
 import constants
@@ -33,7 +35,11 @@ class App:
         self._display_surf = pygame.display.set_mode(
             self.size, pygame.HWSURFACE | pygame.DOUBLEBUF
         )
-        self._sprites = Supsension()
+        self._suspension = Supsension()
+        self._obstacles = pygame.sprite.Group()
+        self._sprites = pygame.sprite.Group(
+            self._suspension,
+            self._obstacles)
         self._running = True
 
     def on_event(self, event):
@@ -42,6 +48,12 @@ class App:
 
     def on_loop(self, dt):
         self._sprites.update(dt=dt)
+        self._suspension._wheel.collide(self._obstacles)
+
+        if randint(0, 100) == 0:
+            bump = Bump((640, 350), 75)
+            self._sprites.add(bump)
+            self._obstacles.add(bump)
 
     def on_render(self):
         self._display_surf.fill(constants.WHITE)
