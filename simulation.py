@@ -1,27 +1,14 @@
 from random import randint
 import pygame.rect
 import pygame
-from pygame.locals import *
 
-from body import Body
-from spring import Spring
-from wheel import Wheel
+from suspension import Supsension
 from obstacles import Bump
 
 
 import constants
 
 clock = pygame.time.Clock()
-
-
-class Supsension(pygame.sprite.Group):
-    def __init__(self):
-        self._wheel = Wheel(radius=50, position=(100, 290))
-        self._body = Body()
-        self._spring = Spring(self._body, self._wheel)
-        self._body.spring = self._spring
-        self._wheel.spring = self._spring
-        super().__init__([self._wheel, self._body, self._spring])
 
 
 class App:
@@ -33,8 +20,8 @@ class App:
     def on_init(self):
         pygame.init()
         self._display_surf = pygame.display.set_mode(self.size, pygame.HWSURFACE | pygame.DOUBLEBUF)
-        self._suspension = Supsension()
         self._obstacles = pygame.sprite.Group()
+        self._suspension = Supsension(self._obstacles)
         self._sprites = pygame.sprite.Group(self._suspension, self._obstacles)
         self._running = True
 
@@ -44,9 +31,9 @@ class App:
 
     def on_loop(self, dt):
         self._sprites.update(dt=dt)
-        self._suspension._wheel.collide(self._obstacles)
+        self._suspension.up(dt)
 
-        if randint(0, 100) < 3:
+        if randint(0, 100) < 1:
             bump = Bump((640, 350), 75)
             self._sprites.add(bump)
             self._obstacles.add(bump)

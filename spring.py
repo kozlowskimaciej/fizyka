@@ -24,32 +24,35 @@ class Spring(pygame.sprite.Sprite):
         self.k = 4500
         self.min_length = 50
         self.max_length = 200
-        self.force = 0
-        self.is_max = False
-        self.is_min = False
+        self.dumping = 2 * 100000
 
-        self.last_dx = 0
+        self.force = 0
+        self.last_dx = self.dx
         self.dx_change = 0
 
         self.rect.x = 45
 
-    def update(self, dt: float):
+    @property
+    def dx(self) -> float:
+        return self.attch1.attachment.y - self.attch2.attachment.y + self.max_length
+
+    @property
+    def is_max(self):
+        return self.dx <= 0
+
+    @property
+    def is_min(self):
+        return self.dx >= self.max_length - self.min_length
+
+    def up(self, dt: float):
         self.rect.y = int((self.attch1.attachment.y + self.attch2.attachment.y) / 2)
 
-        dx = self.attch1.attachment.y - self.attch2.attachment.y + self.max_length
-
-        limited_dx = max(min(dx, self.max_length), 0)
+        limited_dx = max(min(self.dx, self.max_length), 0)
         self.dx_change = limited_dx - self.last_dx
         self.last_dx = limited_dx
+
+        dump = self.dx_change * dt * self.dumping
+
         self.force = self.k * limited_dx
-
-        self.is_max = dx < 0
-        self.is_min = dx > self.max_length - self.min_length
-
-        # print( f"dx {limited_dx:.3f} force {self.force:.3f} max {self.is_max} min {self.is_min}")
-
-    def other_attachment(self, obj):
-        if obj == self.attch1:
-            return self.attch2
-        if obj == self.attch2:
-            return self.attch1
+        print(f"spring {self.force:10.1f}, dump {dump:10.1f}, dx: {self.dx:10.1f}")
+        self.force += dump
