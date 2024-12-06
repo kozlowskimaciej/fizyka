@@ -21,7 +21,9 @@ class Supsension(pygame.sprite.Group):
             self._wheel, constants.GRAVITY + self._spring.force / self._wheel.mass, dt
         )
         self._apply_acceleration(
-            self._body, constants.GRAVITY - self._spring.force / self._body.mass, dt
+            self._body,
+            constants.GRAVITY - (self._spring.force + self._spring.damp) / self._body.mass,
+            dt,
         )
 
         # Prevent falling below ground

@@ -26,7 +26,7 @@ class Spring(pygame.sprite.Sprite):
         self.k = 4500
         self.min_length = 50
         self.max_length = 200
-        self.damping = 2 * 100000
+        self.damping = 4.5 * 100000
 
         self.force = 0
         self.last_dx = self.dx
@@ -58,8 +58,7 @@ class Spring(pygame.sprite.Sprite):
         self.dx_change = self.dx - self.last_dx
         self.last_dx = self.dx
 
-        damp = self.dx_change * dt * self.damping
+        self.damp = self.dx_change * dt * self.damping
 
         self.force = self.k * self.dx
-        print(f"spring {self.force:10.1f}, damp {damp:10.1f}, dx: {self.dx:10.1f}")
-        self.force += damp
+        print(f"spring {self.force:10.1f}, damp {self.damp:10.1f}, dx: {self.dx:10.1f}")
