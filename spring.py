@@ -1,11 +1,13 @@
+from abc import ABC, abstractmethod
 import pygame
 
 import constants
 
 
-class SpringAttachment:
+class SpringAttachment(ABC):
     @property
-    def attachment(self) -> pygame.Vector2:
+    @abstractmethod
+    def spring_attachment(self) -> float:
         pass
 
 
@@ -24,7 +26,7 @@ class Spring(pygame.sprite.Sprite):
         self.k = 4500
         self.min_length = 50
         self.max_length = 200
-        self.dumping = 2 * 100000
+        self.damping = 2 * 100000
 
         self.force = 0
         self.last_dx = self.dx
@@ -34,7 +36,7 @@ class Spring(pygame.sprite.Sprite):
 
     @property
     def dx(self) -> float:
-        return self.attch1.attachment.y - self.attch2.attachment.y + self.max_length
+        return self.attch1.spring_attachment - self.attch2.spring_attachment + self.max_length
 
     @property
     def is_max(self):
@@ -44,15 +46,20 @@ class Spring(pygame.sprite.Sprite):
     def is_min(self):
         return self.dx >= self.max_length - self.min_length
 
+    def update(self, dt):
+        self.rect.y = int(
+            (self.attch1.spring_attachment + self.attch2.spring_attachment - self.rect.h) / 2
+        )
+
     def up(self, dt: float):
-        self.rect.y = int((self.attch1.attachment.y + self.attch2.attachment.y) / 2)
+        tolerance = 10**-3
+        assert 0 - tolerance <= self.dx <= self.max_length + tolerance, self.dx
 
-        limited_dx = max(min(self.dx, self.max_length), 0)
-        self.dx_change = limited_dx - self.last_dx
-        self.last_dx = limited_dx
+        self.dx_change = self.dx - self.last_dx
+        self.last_dx = self.dx
 
-        dump = self.dx_change * dt * self.dumping
+        damp = self.dx_change * dt * self.damping
 
-        self.force = self.k * limited_dx
-        print(f"spring {self.force:10.1f}, dump {dump:10.1f}, dx: {self.dx:10.1f}")
-        self.force += dump
+        self.force = self.k * self.dx
+        print(f"spring {self.force:10.1f}, damp {damp:10.1f}, dx: {self.dx:10.1f}")
+        self.force += damp

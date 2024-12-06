@@ -8,12 +8,10 @@ from wheel import Wheel
 class Supsension(pygame.sprite.Group):
     def __init__(self, obstacles):
         self.obstacles = obstacles
-        self._wheel = Wheel(radius=50, position=(100, 240))
-        self._body = Body()
+        self._wheel = Wheel(radius=50, position=(0, 240))
+        self._body = Body(position=(1, 50))
         self._spring = Spring(self._body, self._wheel)
-        self._body.spring = self._spring
-        self._wheel.spring = self._spring
-        super().__init__([self._wheel, self._body, self._spring])
+        super().__init__([self._spring, self._wheel, self._body])
 
     ground_level = 300
 
@@ -37,12 +35,14 @@ class Supsension(pygame.sprite.Group):
         if self._spring.is_max:
             self._wheel.y_velocity = min(self._wheel.y_velocity, self._body.y_velocity)
             self._wheel.y_cord = min(
-                self._wheel.y_cord, self._body.y_cord + self._spring.max_length
+                self._wheel.y_cord, self._body.spring_attachment + self._spring.max_length
             )
 
         # Prevent body from falling below the wheel (with min_length gap)
         if self._spring.is_min and self._wheel.on_ground:
-            self._body.y_cord = min(self._body.y_cord, self._wheel.y_cord - self._spring.min_length)
+            self._body.spring_attachment = min(
+                self._body.spring_attachment, self._wheel.y_cord - self._spring.min_length
+            )
             self._body.y_velocity = min(self._body.y_velocity, self._wheel.y_velocity)
 
     @staticmethod
