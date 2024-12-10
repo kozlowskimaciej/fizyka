@@ -3,11 +3,10 @@ from random import randint
 import pygame
 import pygame_widgets
 
-from suspension import Supsension
-from obstacles import Bump
-from custom_slider import CustomSlider
-
 import globals
+from obstacles import Bump
+from suspension import Supsension
+from widgets import LabeledSlider
 
 
 clock = pygame.time.Clock()
@@ -28,7 +27,7 @@ class App:
         self._sprites = pygame.sprite.Group(self._suspension, self._obstacles)
         self._running = True
         self._gui = [
-            CustomSlider(
+            LabeledSlider(
                 self._display_surf,
                 x=50,
                 y=50,
@@ -40,7 +39,7 @@ class App:
                 on_change=lambda val: setattr(globals, 'GRAVITY', val),
                 name="Gravity"
             ),
-            CustomSlider(
+            LabeledSlider(
                 self._display_surf,
                 x=300,
                 y=50,

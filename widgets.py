@@ -2,7 +2,7 @@ import pygame
 from pygame_widgets.slider import Slider
 
 
-class CustomSlider:
+class LabeledSlider:
     def __init__(self, surface, x, y, width, height, min_value, max_value, initial_value, on_change, name):
         super().__init__()
         self.surface = surface
