@@ -1,6 +1,6 @@
 import pygame
 
-import constants
+import globals
 
 
 class Body(pygame.sprite.Sprite):
@@ -12,11 +12,11 @@ class Body(pygame.sprite.Sprite):
         self.y_velocity: float = 0
 
         self.image = pygame.Surface([400, 50])
-        self.image.fill(constants.WHITE)
-        self.image.set_colorkey(constants.WHITE)
+        self.image.fill(globals.WHITE)
+        self.image.set_colorkey(globals.WHITE)
         self.rect = self.image.get_rect()
         self.rect.x = self.x_cord
-        pygame.draw.rect(self.image, constants.RED, rect=self.rect)
+        pygame.draw.rect(self.image, globals.RED, rect=self.rect)
 
         self.spring_attachment_offset = self.rect.h
         self.mass = 400

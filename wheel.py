@@ -1,7 +1,7 @@
 from typing import Iterable
 import pygame
 
-import constants
+import globals
 
 
 class Wheel(pygame.sprite.Sprite):
@@ -15,13 +15,13 @@ class Wheel(pygame.sprite.Sprite):
         self.mass = 5
 
         self.image = pygame.Surface([2 * radius, 2 * radius])
-        self.image.fill(constants.WHITE)
-        self.image.set_colorkey(constants.WHITE)
+        self.image.fill(globals.WHITE)
+        self.image.set_colorkey(globals.WHITE)
         self.rect = self.image.get_rect()
         self.rect.x = self.x_cord
         pygame.draw.circle(
             self.image,
-            constants.BLACK,
+            globals.BLACK,
             [radius, radius],
             self.radius,
             width=0,

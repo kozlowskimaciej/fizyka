@@ -1,6 +1,6 @@
 import pygame
 from body import Body
-import constants
+import globals
 from spring import Spring
 from wheel import Wheel
 
@@ -18,11 +18,11 @@ class Supsension(pygame.sprite.Group):
     def up(self, dt: float):
         self._spring.up(dt)
         self._apply_acceleration(
-            self._wheel, constants.GRAVITY + self._spring.force / self._wheel.mass, dt
+            self._wheel, globals.GRAVITY + self._spring.force / self._wheel.mass, dt
         )
         self._apply_acceleration(
             self._body,
-            constants.GRAVITY - (self._spring.force + self._spring.damp) / self._body.mass,
+            globals.GRAVITY - (self._spring.force + self._spring.damp) / self._body.mass,
             dt,
         )
 

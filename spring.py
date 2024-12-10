@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 import pygame
 
-import constants
+import globals
 
 
 class SpringAttachment(ABC):
@@ -15,10 +15,10 @@ class Spring(pygame.sprite.Sprite):
     def __init__(self, attch1: SpringAttachment, attch2: SpringAttachment):
         super().__init__()
         self.image = pygame.Surface([10, 150])
-        self.image.fill(constants.WHITE)
-        self.image.set_colorkey(constants.WHITE)
+        self.image.fill(globals.WHITE)
+        self.image.set_colorkey(globals.WHITE)
         self.rect: pygame.rect.Rect = self.image.get_rect()
-        pygame.draw.rect(self.image, constants.BLUE, rect=self.rect)
+        pygame.draw.rect(self.image, globals.BLUE, rect=self.rect)
 
         self.attch1 = attch1
         self.attch2 = attch2
@@ -26,7 +26,6 @@ class Spring(pygame.sprite.Sprite):
         self.k = 4500
         self.min_length = 50
         self.max_length = 200
-        self.damping = 4.5 * 100000
 
         self.force = 0
         self.last_dx = self.dx
@@ -58,7 +57,8 @@ class Spring(pygame.sprite.Sprite):
         self.dx_change = self.dx - self.last_dx
         self.last_dx = self.dx
 
-        self.damp = self.dx_change * dt * self.damping
+        self.damp = self.dx_change * dt * globals.DAMPING
+        print(globals.DAMPING)
 
         self.force = self.k * self.dx
         print(f"spring {self.force:10.1f}, damp {self.damp:10.1f}, dx: {self.dx:10.1f}")
