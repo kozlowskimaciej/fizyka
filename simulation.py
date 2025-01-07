@@ -1,10 +1,8 @@
-from random import randint
-
 import pygame
 import pygame_widgets
 
 import globals
-from obstacles import Bump
+from obstacle_generators import RandomGenerator, RegularGenerator, TrackGenerator
 from suspension import Supsension
 from widgets import LabeledSlider
 
@@ -26,6 +24,8 @@ class App:
         self._suspension = Supsension(self._obstacles)
         self._sprites = pygame.sprite.Group(self._suspension, self._obstacles)
         self._running = True
+        # self.track_generator: TrackGenerator = RegularGenerator(500)
+        self.track_generator: TrackGenerator = RandomGenerator()
         self._gui = [
             LabeledSlider(
                 self._display_surf,
@@ -36,8 +36,8 @@ class App:
                 min_value=0,
                 max_value=600,
                 initial_value=globals.GRAVITY,
-                on_change=lambda val: setattr(globals, 'GRAVITY', val),
-                name="Gravity"
+                on_change=lambda val: setattr(globals, "GRAVITY", val),
+                name="Gravity",
             ),
             LabeledSlider(
                 self._display_surf,
@@ -48,9 +48,10 @@ class App:
                 min_value=0,
                 max_value=60000000,
                 initial_value=globals.DAMPING,
-                on_change=lambda val: setattr(globals, 'DAMPING', val),
-                name="Damping"
-            )]
+                on_change=lambda val: setattr(globals, "DAMPING", val),
+                name="Damping",
+            ),
+        ]
 
     def on_event(self, event):
         if event.type == pygame.QUIT:
@@ -62,8 +63,7 @@ class App:
         for it in self._gui:
             it.update()
 
-        if randint(0, 100) < 1:
-            bump = Bump((640, 350), 75)
+        if bump := self.track_generator.generate():
             self._sprites.add(bump)
             self._obstacles.add(bump)
 
