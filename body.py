@@ -1,7 +1,5 @@
 import pygame
 
-import globals
-
 
 class Body(pygame.sprite.Sprite):
     def __init__(self, position: tuple[int, int]):

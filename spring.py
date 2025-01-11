@@ -1,5 +1,7 @@
 from abc import ABC, abstractmethod
 import pygame
+import matplotlib.pyplot as plt
+import time
 
 import globals
 
@@ -33,6 +35,20 @@ class Spring(pygame.sprite.Sprite):
 
         self.rect.x = 45
 
+        self.start_time = time.time()
+        self.fig, (self.ax1, self.ax2) = plt.subplots(2, 1)
+        self.fig.canvas.manager.set_window_title('Car')
+        self.ax1.set_xlabel('Time (s)')
+        self.ax1.set_ylabel('Spring dx')
+        self.ax2.set_xlabel('Time (s)')
+        self.ax2.set_ylabel('Body y_cord')
+        self.x_data = []
+        self.y_data = []
+        self.y_cord_data = []
+
+        plt.ion()
+
+
     @property
     def dx(self) -> float:
         return self.attch1.spring_attachment - self.attch2.spring_attachment + self.max_length
@@ -49,6 +65,29 @@ class Spring(pygame.sprite.Sprite):
         self.rect.y = int(
             (self.attch1.spring_attachment + self.attch2.spring_attachment - self.rect.h) / 2
         )
+
+        current_time = time.time() - self.start_time
+        self.x_data.append(current_time)
+        self.y_data.append(self.dx)
+
+        self.y_cord_data.append(self.attch1.y_cord)
+
+        if len(self.x_data) > 1:
+            self.ax1.set_xlim(max(0, max(self.x_data) - 30), max(self.x_data))
+            self.ax2.set_xlim(max(0, max(self.x_data) - 30), max(self.x_data))
+        else:
+            self.ax1.set_xlim(0, 30)
+            self.ax2.set_xlim(0, 30)
+
+        self.ax1.clear()
+        self.ax1.plot(self.x_data, self.y_data)
+        self.ax1.set_xlabel('Time (s)')
+        self.ax1.set_ylabel('Spring x position offset')
+
+        self.ax2.clear()
+        self.ax2.plot(self.x_data, self.y_cord_data)
+        self.ax2.set_xlabel('Time (s)')
+        self.ax2.set_ylabel('Body y position')
 
     def up(self, dt: float):
         tolerance = 10**-3

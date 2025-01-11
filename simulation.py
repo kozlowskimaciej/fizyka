@@ -1,5 +1,6 @@
 import time
 
+from matplotlib import pyplot as plt
 import pygame
 import pygame_widgets
 
@@ -55,10 +56,10 @@ class App:
                 self._display_surf,
                 x=650,
                 y=50,
-                width=150,
+                width=300,
                 height=10,
                 min_value=20,
-                max_value=5000,
+                max_value=20000,
                 initial_value=500,
                 on_change=lambda val: setattr(self.track_generator, "gen_param", val),
                 name="Generator param",
@@ -108,7 +109,6 @@ class App:
         last_frame_t = time.time()
         while self._running:
             if (sleep_t := time.time() - last_frame_t) and sleep_t < 0.05:
-                print(f'{sleep_t=}')
                 time.sleep(0.05-sleep_t)
             last_frame_t = time.time()
             events = pygame.event.get()
@@ -117,6 +117,8 @@ class App:
             pygame_widgets.update(events)
             self.on_loop(dt=0.04)
             self.on_render()
+            plt.draw()
+            plt.pause(0.01)
         self.on_cleanup()
 
     def __change_track_generator(self, value):
