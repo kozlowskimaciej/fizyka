@@ -1,4 +1,5 @@
 import pygame
+from pygame_widgets.dropdown import Dropdown
 from pygame_widgets.slider import Slider
 
 
@@ -57,3 +58,15 @@ class LabeledSlider:
 
     def get_value(self):
         return self.current_value
+
+
+class UpdatableDropdown(Dropdown):
+    def __init__(self, on_change, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.on_change = on_change
+        self.prev_state = self.getSelected()
+
+    def update(self):
+        if (selected := self.getSelected()) and self.prev_state != selected:
+            self.prev_state = selected
+            self.on_change(selected)

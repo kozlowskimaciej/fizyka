@@ -4,8 +4,7 @@ import pygame_widgets
 import globals
 from obstacle_generators import RandomGenerator, RegularGenerator, TrackGenerator
 from suspension import Supsension
-from widgets import LabeledSlider
-
+from widgets import LabeledSlider, UpdatableDropdown
 
 clock = pygame.time.Clock()
 
@@ -14,7 +13,7 @@ class App:
     def __init__(self):
         self._running = True
         self._display_surf = None
-        self.size = self.weight, self.height = 640, 400
+        self.size = self.weight, self.height = globals.WINDOW_SIZE
         self.gravity_slider = None
 
     def on_init(self):
@@ -24,8 +23,8 @@ class App:
         self._suspension = Supsension(self._obstacles)
         self._sprites = pygame.sprite.Group(self._suspension, self._obstacles)
         self._running = True
-        # self.track_generator: TrackGenerator = RegularGenerator(500)
-        self.track_generator: TrackGenerator = RandomGenerator()
+        self.track_generator: TrackGenerator = RegularGenerator()
+        # self.track_generator: TrackGenerator = RandomGenerator()
         self._gui = [
             LabeledSlider(
                 self._display_surf,
@@ -41,16 +40,42 @@ class App:
             ),
             LabeledSlider(
                 self._display_surf,
-                x=300,
+                x=350,
                 y=50,
                 width=150,
                 height=10,
                 min_value=0,
-                max_value=60000000,
+                max_value=60000,
                 initial_value=globals.DAMPING,
                 on_change=lambda val: setattr(globals, "DAMPING", val),
                 name="Damping",
             ),
+            LabeledSlider(
+                self._display_surf,
+                x=650,
+                y=50,
+                width=150,
+                height=10,
+                min_value=20,
+                max_value=5000,
+                initial_value=500,
+                on_change=lambda val: setattr(self.track_generator, "gen_param", val),
+                name="Generator param",
+            ),
+            UpdatableDropdown(
+                on_change=self.__change_track_generator,
+                win=self._display_surf,
+                x=650,
+                y=150,
+                width=150,
+                height=50,
+                name='Regular',
+                choices=[
+                    'Random',
+                    'Regular',
+                ],
+                borderRadius=3,
+            )
         ]
 
     def on_event(self, event):
@@ -88,6 +113,14 @@ class App:
             self.on_loop(dt=dt)
             self.on_render()
         self.on_cleanup()
+
+    def __change_track_generator(self, value):
+        if value == 'Random':
+            self.track_generator = RandomGenerator()
+        elif value == 'Regular':
+            self.track_generator = RegularGenerator()
+        else:
+            raise ValueError(f'Invalid value: {value}')
 
 
 if __name__ == "__main__":
