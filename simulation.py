@@ -74,6 +74,7 @@ class App:
                 name='Regular',
                 choices=[
                     'Random',
+                    'None',
                     'Regular',
                 ],
                 borderRadius=3,
@@ -126,6 +127,8 @@ class App:
             self.track_generator = RandomGenerator()
         elif value == 'Regular':
             self.track_generator = RegularGenerator()
+        elif value == 'None':
+            self.track_generator = TrackGenerator()
         else:
             raise ValueError(f'Invalid value: {value}')
 

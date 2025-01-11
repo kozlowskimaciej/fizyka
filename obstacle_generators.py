@@ -14,15 +14,13 @@ def generate_obstacle() -> Bump:
 
 
 class TrackGenerator:
-    gen_param: int
+    gen_param: int = 100
 
     def generate(self) -> Bump | None:
         pass
 
 
 class RandomGenerator(TrackGenerator):
-    gen_param = 100
-
     def generate(self) -> Bump | None:
         if randint(0, self.gen_param) < 5:
             return generate_obstacle()
