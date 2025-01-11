@@ -58,7 +58,6 @@ class Spring(pygame.sprite.Sprite):
         self.last_dx = self.dx
 
         self.damp = self.dx_change * dt * globals.DAMPING
-        print(globals.DAMPING)
 
         self.force = self.k * self.dx
-        print(f"spring {self.force:10.1f}, damp {self.damp:10.1f}, dx: {self.dx:10.1f}")
+        # print(f"spring {self.force:10.1f}, damp {self.damp:10.1f}, dx: {self.dx:10.1f}")

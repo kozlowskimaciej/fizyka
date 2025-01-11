@@ -11,12 +11,11 @@ class Body(pygame.sprite.Sprite):
         self.y_cord: float = position[1]
         self.y_velocity: float = 0
 
-        self.image = pygame.Surface([400, 50])
-        self.image.fill(globals.WHITE)
-        self.image.set_colorkey(globals.WHITE)
+        self.image = pygame.image.load('img/car.png').convert_alpha()
+        self.image = pygame.transform.scale(self.image, (300, 100))
         self.rect = self.image.get_rect()
         self.rect.x = self.x_cord
-        pygame.draw.rect(self.image, globals.RED, rect=self.rect)
+        self.rect.y = self.y_cord
 
         self.spring_attachment_offset = self.rect.h
         self.mass = 400

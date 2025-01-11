@@ -14,20 +14,15 @@ class Wheel(pygame.sprite.Sprite):
         self.y_velocity: float = 0
         self.mass = 5
 
-        self.image = pygame.Surface([2 * radius, 2 * radius])
-        self.image.fill(globals.WHITE)
-        self.image.set_colorkey(globals.WHITE)
+        self.image = pygame.image.load(
+            'img/wheel.png').convert_alpha()
+        self.image = pygame.transform.scale(self.image,
+                                            (2 * radius, 2 * radius))
         self.rect = self.image.get_rect()
         self.rect.x = self.x_cord
-        pygame.draw.circle(
-            self.image,
-            globals.BLACK,
-            [radius, radius],
-            self.radius,
-            width=0,
-        )
 
         self.collision = False
+        self.angle = 0
 
     def update(self, dt):
         self.rect.y = int(self.y_cord)
@@ -42,7 +37,8 @@ class Wheel(pygame.sprite.Sprite):
         self.collision = bool(y_diff)
 
         if self.collision:
-            self.y_velocity = min(self.y_velocity, 0)  # TODO: Set it to -sin(ground_angle)
+            self.y_velocity = min(self.y_velocity,
+                                  0)  # TODO: Set it to -sin(ground_angle)
             self.y_cord -= y_diff
 
     @property
