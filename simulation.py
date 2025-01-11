@@ -1,3 +1,5 @@
+import time
+
 import pygame
 import pygame_widgets
 
@@ -103,8 +105,12 @@ class App:
 
     def on_execute(self):
         self.on_init()
+        last_frame_t = time.time()
         while self._running:
-            dt = clock.tick(60) / 1000
+            if (sleep_t := time.time() - last_frame_t) and sleep_t < 0.05:
+                print(f'{sleep_t=}')
+                time.sleep(0.05-sleep_t)
+            last_frame_t = time.time()
             events = pygame.event.get()
             for event in events:
                 self.on_event(event)
