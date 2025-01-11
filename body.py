@@ -12,7 +12,7 @@ class Body(pygame.sprite.Sprite):
         self.y_velocity: float = 0
 
         self.image = pygame.image.load('img/car.png').convert_alpha()
-        self.image = pygame.transform.scale(self.image, (300, 100))
+        self.image = pygame.transform.scale(self.image, (800, 450))
         self.rect = self.image.get_rect()
         self.rect.x = self.x_cord
         self.rect.y = self.y_cord

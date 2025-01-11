@@ -8,12 +8,12 @@ from wheel import Wheel
 class Supsension(pygame.sprite.Group):
     def __init__(self, obstacles):
         self.obstacles = obstacles
-        self._wheel = Wheel(radius=50, position=(0, 240))
-        self._body = Body(position=(1, 50))
+        self._wheel = Wheel(radius=125, position=(375, 240))
+        self._body = Body(position=(1, -300))
         self._spring = Spring(self._body, self._wheel)
         super().__init__([self._spring, self._wheel, self._body])
 
-    ground_level = 300
+    ground_level = globals.WINDOW_SIZE[1] - 250
 
     def up(self, dt: float):
         self._spring.up(dt)

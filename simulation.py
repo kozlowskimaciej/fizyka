@@ -24,7 +24,6 @@ class App:
         self._sprites = pygame.sprite.Group(self._suspension, self._obstacles)
         self._running = True
         self.track_generator: TrackGenerator = RegularGenerator()
-        # self.track_generator: TrackGenerator = RandomGenerator()
         self._gui = [
             LabeledSlider(
                 self._display_surf,
@@ -45,7 +44,7 @@ class App:
                 width=150,
                 height=10,
                 min_value=0,
-                max_value=60000,
+                max_value=600000,
                 initial_value=globals.DAMPING,
                 on_change=lambda val: setattr(globals, "DAMPING", val),
                 name="Damping",
@@ -110,7 +109,7 @@ class App:
             for event in events:
                 self.on_event(event)
             pygame_widgets.update(events)
-            self.on_loop(dt=dt)
+            self.on_loop(dt=0.04)
             self.on_render()
         self.on_cleanup()
 
