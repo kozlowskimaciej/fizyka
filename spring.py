@@ -1,4 +1,3 @@
-from abc import ABC, abstractmethod
 import pygame
 import matplotlib.pyplot as plt
 import time
@@ -6,11 +5,14 @@ import time
 import globals
 
 
-class SpringAttachment(ABC):
+class SpringAttachment:
     @property
-    @abstractmethod
     def spring_attachment(self) -> float:
-        pass
+        return self.y_cord + self.spring_offset
+
+    @spring_attachment.setter
+    def spring_attachment(self, value: float) -> None:
+        self.y_cord = value - self.spring_offset
 
 
 class Spring(pygame.sprite.Sprite):

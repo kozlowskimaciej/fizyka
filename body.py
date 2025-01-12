@@ -1,7 +1,9 @@
 import pygame
 
+from spring import SpringAttachment
 
-class Body(pygame.sprite.Sprite):
+
+class Body(pygame.sprite.Sprite, SpringAttachment):
     def __init__(self, position: tuple[int, int]):
         super().__init__()
 
@@ -15,16 +17,8 @@ class Body(pygame.sprite.Sprite):
         self.rect.x = self.x_cord
         self.rect.y = self.y_cord
 
-        self.spring_attachment_offset = self.rect.h - 125
+        self.spring_offset = self.rect.h - 125
         self.mass = 400
 
     def update(self, dt):
         self.rect.y = int(self.y_cord)
-
-    @property
-    def spring_attachment(self) -> float:
-        return self.y_cord + self.spring_attachment_offset
-
-    @spring_attachment.setter
-    def spring_attachment(self, val: float) -> float:
-        self.y_cord = val - self.spring_attachment_offset

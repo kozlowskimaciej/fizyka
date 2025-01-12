@@ -48,7 +48,8 @@ class Supsension(pygame.sprite.Group):
         # Prevent body from falling below the wheel (with min_length gap)
         if self._spring.is_min and self._wheel.on_ground:
             self._body.spring_attachment = min(
-                self._body.spring_attachment, self._wheel.y_cord - self._spring.min_length
+                self._body.spring_attachment,
+                self._wheel.spring_attachment - self._spring.min_length,
             )
             self._body.y_velocity = min(self._body.y_velocity, self._wheel.y_velocity)
 

@@ -1,8 +1,10 @@
 from typing import Iterable
 import pygame
 
+from spring import SpringAttachment
 
-class Wheel(pygame.sprite.Sprite):
+
+class Wheel(pygame.sprite.Sprite, SpringAttachment):
     def __init__(self, radius: int, position: tuple[int, int]):
         super().__init__()
 
@@ -19,6 +21,7 @@ class Wheel(pygame.sprite.Sprite):
 
         self.collision = False
         self.angle = 0
+        self.spring_offset = self.radius
 
     def update(self, dt):
         self.rect.y = int(self.y_cord)
@@ -35,14 +38,6 @@ class Wheel(pygame.sprite.Sprite):
         if self.collision:
             self.y_velocity = min(self.y_velocity, 0)  # TODO: Set it to -sin(ground_angle)
             self.y_cord -= y_diff
-
-    @property
-    def spring_attachment(self) -> float:
-        return self.y_cord + self.radius
-
-    @spring_attachment.setter
-    def spring_attachment(self, value) -> None:
-        self.y_cord = value - self.radius
 
     @property
     def on_ground(self) -> bool:
