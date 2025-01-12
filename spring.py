@@ -14,40 +14,38 @@ class SpringAttachment(ABC):
 
 
 class Spring(pygame.sprite.Sprite):
-    def __init__(self, attch1: SpringAttachment, attch2: SpringAttachment):
+    orig_image = pygame.image.load("img/spring.jpg")
+
+    def __init__(self, attch1: SpringAttachment, attch2: SpringAttachment, x_cord: int):
         super().__init__()
-        self.image = pygame.Surface([10, 150])
-        self.image.fill(globals.WHITE)
-        self.image.set_colorkey(globals.WHITE)
-        self.rect: pygame.rect.Rect = self.image.get_rect()
-        pygame.draw.rect(self.image, globals.BLUE, rect=self.rect)
+
+        self.image = self.orig_image
+        self.rect = self.image.get_rect()
+        self.x_cord = x_cord
 
         self.attch1 = attch1
         self.attch2 = attch2
 
         self.k = 4500
         self.min_length = 50
-        self.max_length = 200
+        self.max_length = 500
 
         self.force = 0
         self.last_dx = self.dx
         self.dx_change = 0
 
-        self.rect.x = 45
-
         self.start_time = time.time()
         self.fig, (self.ax1, self.ax2) = plt.subplots(2, 1)
-        self.fig.canvas.manager.set_window_title('Car')
-        self.ax1.set_xlabel('Time (s)')
-        self.ax1.set_ylabel('Spring dx')
-        self.ax2.set_xlabel('Time (s)')
-        self.ax2.set_ylabel('Body y_cord')
+        self.fig.canvas.manager.set_window_title("Car")
+        self.ax1.set_xlabel("Time (s)")
+        self.ax1.set_ylabel("Spring dx")
+        self.ax2.set_xlabel("Time (s)")
+        self.ax2.set_ylabel("Body y_cord")
         self.x_data = []
         self.y_data = []
         self.y_cord_data = []
 
         plt.ion()
-
 
     @property
     def dx(self) -> float:
@@ -62,9 +60,12 @@ class Spring(pygame.sprite.Sprite):
         return self.dx >= self.max_length - self.min_length
 
     def update(self, dt):
-        self.rect.y = int(
-            (self.attch1.spring_attachment + self.attch2.spring_attachment - self.rect.h) / 2
-        )
+        self.image = pygame.transform.scale(self.orig_image, (80, (self.max_length - self.dx)))
+        self.rect = self.image.get_rect()
+        self.rect.x = self.x_cord - self.rect.w / 2
+        self.rect.y = (
+            self.attch1.spring_attachment + self.attch2.spring_attachment - self.rect.h
+        ) / 2
 
         current_time = time.time() - self.start_time
         self.x_data.append(current_time)
@@ -81,13 +82,13 @@ class Spring(pygame.sprite.Sprite):
 
         self.ax1.clear()
         self.ax1.plot(self.x_data, self.y_data)
-        self.ax1.set_xlabel('Time (s)')
-        self.ax1.set_ylabel('Spring x position offset')
+        self.ax1.set_xlabel("Time (s)")
+        self.ax1.set_ylabel("Spring x position offset")
 
         self.ax2.clear()
         self.ax2.plot(self.x_data, self.y_cord_data)
-        self.ax2.set_xlabel('Time (s)')
-        self.ax2.set_ylabel('Body y position')
+        self.ax2.set_xlabel("Time (s)")
+        self.ax2.set_ylabel("Body y position")
 
     def up(self, dt: float):
         tolerance = 10**-3

@@ -8,10 +8,14 @@ from wheel import Wheel
 class Supsension(pygame.sprite.Group):
     def __init__(self, obstacles):
         self.obstacles = obstacles
-        self._wheel = Wheel(radius=125, position=(410, 240))
-        self._body = Body(position=(1, -300))
-        self._spring = Spring(self._body, self._wheel)
-        super().__init__([self._spring, self._wheel, self._body])
+        self._wheel = Wheel(radius=125, position=(410, 115))
+        self._body = Body(position=(1, -175))
+        self._spring = Spring(
+            self._body,
+            self._wheel,
+            x_cord=self._wheel.x_cord + self._wheel.radius,
+        )
+        super().__init__([self._spring, self._body, self._wheel])
 
     ground_level = globals.WINDOW_SIZE[1] - 250
 
@@ -36,8 +40,9 @@ class Supsension(pygame.sprite.Group):
         # Prevent spring from stretching more that max_length
         if self._spring.is_max:
             self._wheel.y_velocity = min(self._wheel.y_velocity, self._body.y_velocity)
-            self._wheel.y_cord = min(
-                self._wheel.y_cord, self._body.spring_attachment + self._spring.max_length
+            self._wheel.spring_attachment = min(
+                self._wheel.spring_attachment,
+                self._body.spring_attachment + self._spring.max_length,
             )
 
         # Prevent body from falling below the wheel (with min_length gap)

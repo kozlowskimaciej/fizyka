@@ -1,8 +1,6 @@
 from typing import Iterable
 import pygame
 
-import globals
-
 
 class Wheel(pygame.sprite.Sprite):
     def __init__(self, radius: int, position: tuple[int, int]):
@@ -14,10 +12,8 @@ class Wheel(pygame.sprite.Sprite):
         self.y_velocity: float = 0
         self.mass = 5
 
-        self.image = pygame.image.load(
-            'img/wheel.png').convert_alpha()
-        self.image = pygame.transform.scale(self.image,
-                                            (2 * radius, 2 * radius))
+        self.image = pygame.image.load("img/wheel.png").convert_alpha()
+        self.image = pygame.transform.scale(self.image, (2 * radius, 2 * radius))
         self.rect = self.image.get_rect()
         self.rect.x = self.x_cord
 
@@ -37,13 +33,16 @@ class Wheel(pygame.sprite.Sprite):
         self.collision = bool(y_diff)
 
         if self.collision:
-            self.y_velocity = min(self.y_velocity,
-                                  0)  # TODO: Set it to -sin(ground_angle)
+            self.y_velocity = min(self.y_velocity, 0)  # TODO: Set it to -sin(ground_angle)
             self.y_cord -= y_diff
 
     @property
     def spring_attachment(self) -> float:
-        return self.y_cord
+        return self.y_cord + self.radius
+
+    @spring_attachment.setter
+    def spring_attachment(self, value) -> None:
+        self.y_cord = value - self.radius
 
     @property
     def on_ground(self) -> bool:

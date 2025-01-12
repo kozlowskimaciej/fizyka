@@ -60,7 +60,7 @@ class App:
                 height=10,
                 min_value=20,
                 max_value=20000,
-                initial_value=500,
+                initial_value=20000,
                 on_change=lambda val: setattr(self.track_generator, "gen_param", val),
                 name="Generator param",
             ),
@@ -71,14 +71,14 @@ class App:
                 y=150,
                 width=150,
                 height=50,
-                name='Regular',
+                name="Regular",
                 choices=[
-                    'Random',
-                    'None',
-                    'Regular',
+                    "Random",
+                    "None",
+                    "Regular",
                 ],
                 borderRadius=3,
-            )
+            ),
         ]
 
     def on_event(self, event):
@@ -110,7 +110,7 @@ class App:
         last_frame_t = time.time()
         while self._running:
             if (sleep_t := time.time() - last_frame_t) and sleep_t < 0.05:
-                time.sleep(0.05-sleep_t)
+                time.sleep(0.05 - sleep_t)
             last_frame_t = time.time()
             events = pygame.event.get()
             for event in events:
@@ -123,14 +123,14 @@ class App:
         self.on_cleanup()
 
     def __change_track_generator(self, value):
-        if value == 'Random':
+        if value == "Random":
             self.track_generator = RandomGenerator()
-        elif value == 'Regular':
+        elif value == "Regular":
             self.track_generator = RegularGenerator()
-        elif value == 'None':
+        elif value == "None":
             self.track_generator = TrackGenerator()
         else:
-            raise ValueError(f'Invalid value: {value}')
+            raise ValueError(f"Invalid value: {value}")
 
 
 if __name__ == "__main__":

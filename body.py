@@ -9,13 +9,13 @@ class Body(pygame.sprite.Sprite):
         self.y_cord: float = position[1]
         self.y_velocity: float = 0
 
-        self.image = pygame.image.load('img/car.png').convert_alpha()
+        self.image = pygame.image.load("img/car.png").convert_alpha()
         self.image = pygame.transform.scale(self.image, (850, 450))
         self.rect = self.image.get_rect()
         self.rect.x = self.x_cord
         self.rect.y = self.y_cord
 
-        self.spring_attachment_offset = self.rect.h
+        self.spring_attachment_offset = self.rect.h - 125
         self.mass = 400
 
     def update(self, dt):
