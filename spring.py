@@ -28,7 +28,6 @@ class Spring(pygame.sprite.Sprite):
         self.attch1 = attch1
         self.attch2 = attch2
 
-        self.k = 4500
         self.min_length = 50
         self.max_length = 500
 
@@ -101,5 +100,5 @@ class Spring(pygame.sprite.Sprite):
 
         self.damp = self.dx_change * dt * globals.DAMPING
 
-        self.force = self.k * self.dx
+        self.force = globals.SPRINGINESS * self.dx
         # print(f"spring {self.force:10.1f}, damp {self.damp:10.1f}, dx: {self.dx:10.1f}")

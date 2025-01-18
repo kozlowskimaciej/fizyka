@@ -27,12 +27,14 @@ class App:
         self._sprites = pygame.sprite.Group(self._suspension, self._obstacles)
         self._running = True
         self.track_generator: TrackGenerator = RegularGenerator()
+        self.slider_width = 150
+        self.gui_x_cord = globals.WINDOW_SIZE[0] - self.slider_width - 130
         self._gui = [
             LabeledSlider(
                 self._display_surf,
-                x=50,
+                x=self.gui_x_cord,
                 y=50,
-                width=150,
+                width=self.slider_width,
                 height=10,
                 min_value=0,
                 max_value=600,
@@ -42,9 +44,9 @@ class App:
             ),
             LabeledSlider(
                 self._display_surf,
-                x=350,
-                y=50,
-                width=150,
+                x=self.gui_x_cord,
+                y=150,
+                width=self.slider_width,
                 height=10,
                 min_value=0,
                 max_value=600000,
@@ -54,18 +56,30 @@ class App:
             ),
             LabeledSlider(
                 self._display_surf,
-                x=650,
-                y=50,
-                width=300,
+                x=self.gui_x_cord,
+                y=250,
+                width=self.slider_width,
+                height=10,
+                min_value=0,
+                max_value=6000,
+                initial_value=globals.SPRINGINESS,
+                on_change=lambda val: setattr(globals, "SPRINGINESS", val),
+                name="Springiness",
+            ),
+            LabeledSlider(
+                self._display_surf,
+                x=self.gui_x_cord,
+                y=350,
+                width=self.slider_width,
                 height=10,
                 min_value=20,
                 max_value=20000,
                 initial_value=20000,
-                on_change=lambda val: setattr(self.track_generator, "gen_param", val),
+                on_change=lambda val: setattr(app.track_generator, "gen_param", val),
                 name="Generator param",
             ),
             UpdatableDropdown(
-                on_change=self.__change_track_generator,
+                on_change=self._change_track_generator,
                 win=self._display_surf,
                 x=650,
                 y=150,
@@ -122,7 +136,7 @@ class App:
             plt.pause(0.01)
         self.on_cleanup()
 
-    def __change_track_generator(self, value):
+    def _change_track_generator(self, value):
         if value == "Random":
             self.track_generator = RandomGenerator()
         elif value == "Regular":
