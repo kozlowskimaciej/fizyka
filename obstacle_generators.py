@@ -2,11 +2,11 @@ from random import randint
 
 import pygame
 
-import globals
+import constants
 from obstacles import Bump
 
 
-INIT_POSITION = (globals.WINDOW_SIZE[0], globals.WINDOW_SIZE[1]-50)
+INIT_POSITION = (constants.WINDOW_SIZE[0], constants.WINDOW_SIZE[1]-50)
 
 
 def generate_obstacle() -> Bump:

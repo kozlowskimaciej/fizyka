@@ -4,6 +4,7 @@ from matplotlib import pyplot as plt
 import pygame
 import pygame_widgets
 
+import constants
 import globals
 from obstacle_generators import RandomGenerator, RegularGenerator, TrackGenerator
 from suspension import Supsension
@@ -16,7 +17,7 @@ class App:
     def __init__(self):
         self._running = True
         self._display_surf = None
-        self.size = self.weight, self.height = globals.WINDOW_SIZE
+        self.size = self.weight, self.height = constants.WINDOW_SIZE
         self.gravity_slider = None
 
     def on_init(self):
@@ -28,7 +29,7 @@ class App:
         self._running = True
         self.track_generator: TrackGenerator = RegularGenerator()
         self.slider_width = 150
-        self.gui_x_cord = globals.WINDOW_SIZE[0] - self.slider_width - 130
+        self.gui_x_cord = constants.WINDOW_SIZE[0] - self.slider_width - 130
         self._gui = [
             LabeledSlider(
                 self._display_surf,
@@ -110,7 +111,7 @@ class App:
             self._obstacles.add(bump)
 
     def on_render(self):
-        self._display_surf.fill(globals.WHITE)
+        self._display_surf.fill(constants.WHITE)
         self._sprites.draw(self._display_surf)
         for it in self._gui:
             it.draw()

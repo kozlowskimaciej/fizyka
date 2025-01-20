@@ -1,4 +1,6 @@
 import pygame
+
+import constants
 from body import Body
 import globals
 from spring import Spring
@@ -17,8 +19,6 @@ class Supsension(pygame.sprite.Group):
         )
         super().__init__([self._spring, self._body, self._wheel])
 
-    ground_level = globals.WINDOW_SIZE[1] - 250
-
     def up(self, dt: float):
         self._spring.up(dt)
         self._apply_acceleration(
@@ -31,9 +31,9 @@ class Supsension(pygame.sprite.Group):
         )
 
         # Prevent falling below ground
-        if self._wheel.y_cord > self.ground_level:
+        if self._wheel.y_cord > constants.GROUND_LEVEL:
             self._wheel.y_velocity = min(self._wheel.y_velocity, 0)
-            self._wheel.y_cord = self.ground_level
+            self._wheel.y_cord = constants.GROUND_LEVEL
 
         self._wheel.collide(self.obstacles)
 

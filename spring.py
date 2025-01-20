@@ -1,7 +1,10 @@
+from collections import deque
+
 import pygame
 import matplotlib.pyplot as plt
 import time
 
+import constants
 import globals
 
 
@@ -36,15 +39,17 @@ class Spring(pygame.sprite.Sprite):
         self.dx_change = 0
 
         self.start_time = time.time()
+
         self.fig, (self.ax1, self.ax2) = plt.subplots(2, 1)
         self.fig.canvas.manager.set_window_title("Car")
         self.ax1.set_xlabel("Time (s)")
         self.ax1.set_ylabel("Spring dx")
         self.ax2.set_xlabel("Time (s)")
         self.ax2.set_ylabel("Body y_cord")
-        self.x_data = []
-        self.y_data = []
-        self.y_cord_data = []
+        self.data_len = 100
+        self.time_history = deque(maxlen=self.data_len)
+        self.dx_history = deque(maxlen=self.data_len)
+        self.body_y_cord_history = deque(maxlen=self.data_len)
 
         plt.ion()
 
@@ -69,25 +74,21 @@ class Spring(pygame.sprite.Sprite):
         ) / 2
 
         current_time = time.time() - self.start_time
-        self.x_data.append(current_time)
-        self.y_data.append(self.dx)
 
-        self.y_cord_data.append(self.attch1.y_cord)
-
-        if len(self.x_data) > 1:
-            self.ax1.set_xlim(max(0, max(self.x_data) - 30), max(self.x_data))
-            self.ax2.set_xlim(max(0, max(self.x_data) - 30), max(self.x_data))
-        else:
-            self.ax1.set_xlim(0, 30)
-            self.ax2.set_xlim(0, 30)
+        self.time_history.append(current_time)
+        self.dx_history.append(self.dx)
+        self.body_y_cord_history.append(constants.GROUND_LEVEL - self.attch1.y_cord)
 
         self.ax1.clear()
-        self.ax1.plot(self.x_data, self.y_data)
+        self.ax2.clear()
+
+        self.ax1.plot(self.time_history, self.dx_history)
+        self.ax1.set_ylim(0, self.max_length)
         self.ax1.set_xlabel("Time (s)")
         self.ax1.set_ylabel("Spring x position offset")
 
-        self.ax2.clear()
-        self.ax2.plot(self.x_data, self.y_cord_data)
+        self.ax2.plot(self.time_history, self.body_y_cord_history)
+        self.ax2.set_ylim(0, constants.WINDOW_SIZE[1] * 1.25)
         self.ax2.set_xlabel("Time (s)")
         self.ax2.set_ylabel("Body y position")
 
