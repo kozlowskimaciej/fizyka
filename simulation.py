@@ -74,7 +74,7 @@ class App:
                 width=self.slider_width,
                 height=10,
                 min_value=20,
-                max_value=20000,
+                max_value=10000,
                 initial_value=5000,
                 on_change=lambda val: setattr(globals, "GENERATOR_PARAM", val),
                 name="Generator param",
