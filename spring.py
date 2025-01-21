@@ -42,7 +42,6 @@ class Spring(pygame.sprite.Sprite):
 
         self.fig, (self.ax1, self.ax2) = plt.subplots(2, 1)
         self.fig.canvas.manager.set_window_title("Car")
-        self.ax1.set_xlabel("Time (s)")
         self.ax1.set_ylabel("Spring dx")
         self.ax2.set_xlabel("Time (s)")
         self.ax2.set_ylabel("Body y_cord")
@@ -84,7 +83,6 @@ class Spring(pygame.sprite.Sprite):
 
         self.ax1.plot(self.time_history, self.dx_history)
         self.ax1.set_ylim(0, self.max_length)
-        self.ax1.set_xlabel("Time (s)")
         self.ax1.set_ylabel("Spring x position offset")
 
         self.ax2.plot(self.time_history, self.body_y_cord_history)
