@@ -76,7 +76,7 @@ class App:
                 min_value=20,
                 max_value=20000,
                 initial_value=5000,
-                on_change=lambda val: setattr(app.track_generator, "gen_param", val),
+                on_change=lambda val: setattr(globals, "GENERATOR_PARAM", val),
                 name="Generator param",
             ),
             UpdatableDropdown(

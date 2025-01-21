@@ -3,6 +3,7 @@ from random import randint
 import pygame
 
 import constants
+import globals
 from obstacles import Bump
 
 
@@ -14,26 +15,23 @@ def generate_obstacle() -> Bump:
 
 
 class TrackGenerator:
-    gen_param: int = 100
-
     def generate(self) -> Bump | None:
         pass
 
 
 class RandomGenerator(TrackGenerator):
     def generate(self) -> Bump | None:
-        if randint(0, self.gen_param) < 5:
+        if randint(0, globals.GENERATOR_PARAM) < 5:
             return generate_obstacle()
         return None
 
 
 class RegularGenerator(TrackGenerator):
-    def __init__(self, interval: int = 100):
-        self.next_obstacle_time = 0
-        self.gen_param = interval
+    def __init__(self):
+        self.last_obstacle_time = 0
 
     def generate(self) -> Bump | None:
-        if pygame.time.get_ticks() > self.next_obstacle_time:
-            self.next_obstacle_time += self.gen_param
+        if pygame.time.get_ticks() > self.last_obstacle_time + globals.GENERATOR_PARAM:
+            self.last_obstacle_time += globals.GENERATOR_PARAM
             return generate_obstacle()
         return None
