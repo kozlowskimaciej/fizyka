@@ -75,15 +75,15 @@ class App:
                 height=10,
                 min_value=20,
                 max_value=20000,
-                initial_value=20000,
+                initial_value=5000,
                 on_change=lambda val: setattr(app.track_generator, "gen_param", val),
                 name="Generator param",
             ),
             UpdatableDropdown(
                 on_change=self._change_track_generator,
                 win=self._display_surf,
-                x=650,
-                y=150,
+                x=self.gui_x_cord,
+                y=450,
                 width=150,
                 height=50,
                 name="Regular",
@@ -123,18 +123,19 @@ class App:
     def on_execute(self):
         self.on_init()
         last_frame_t = time.time()
+        boost = 0.06
         while self._running:
-            if (sleep_t := time.time() - last_frame_t) and sleep_t < 0.05:
-                time.sleep(0.05 - sleep_t)
+            if (sleep_t := time.time() - last_frame_t) and sleep_t < boost:
+                time.sleep(boost - sleep_t)
             last_frame_t = time.time()
             events = pygame.event.get()
             for event in events:
                 self.on_event(event)
             pygame_widgets.update(events)
-            self.on_loop(dt=0.04)
+            self.on_loop(dt=0.06)
             self.on_render()
-            plt.draw()
-            plt.pause(0.01)
+            # plt.draw()
+            # plt.pause(0.01)
         self.on_cleanup()
 
     def _change_track_generator(self, value):

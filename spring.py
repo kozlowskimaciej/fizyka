@@ -31,8 +31,8 @@ class Spring(pygame.sprite.Sprite):
         self.attch1 = attch1
         self.attch2 = attch2
 
-        self.min_length = 50
-        self.max_length = 500
+        self.min_length = 5
+        self.max_length = 200
 
         self.force = 0
         self.last_dx = self.dx
