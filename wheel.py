@@ -27,6 +27,7 @@ class Wheel(pygame.sprite.Sprite, SpringAttachment):
         self.rect.y = int(self.y_cord)
 
     def collide(self, others: Iterable[pygame.sprite.Sprite]) -> bool:
+        self.rect.y = self.y_cord
         y_diff = 0
         for other in others:
             while pygame.sprite.collide_mask(self, other):

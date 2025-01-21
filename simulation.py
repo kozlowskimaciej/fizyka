@@ -101,8 +101,8 @@ class App:
             self._running = False
 
     def on_loop(self, dt):
-        self._sprites.update(dt=dt)
         self._suspension.up(dt)
+        self._sprites.update(dt=dt)
         for it in self._gui:
             it.update()
 
