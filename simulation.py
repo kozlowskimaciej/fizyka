@@ -7,7 +7,7 @@ import pygame_widgets
 import constants
 import globals
 from obstacle_generators import RandomGenerator, RegularGenerator, TrackGenerator
-from suspension import Supsension
+from suspension import Suspension
 from widgets import LabeledSlider, UpdatableDropdown
 
 clock = pygame.time.Clock()
@@ -24,7 +24,7 @@ class App:
         pygame.init()
         self._display_surf = pygame.display.set_mode(self.size, pygame.HWSURFACE | pygame.DOUBLEBUF)
         self._obstacles = pygame.sprite.Group()
-        self._suspension = Supsension(self._obstacles)
+        self._suspension = Suspension(self._obstacles)
         self._sprites = pygame.sprite.Group(self._suspension, self._obstacles)
         self._running = True
         self.track_generator: TrackGenerator = RegularGenerator()
@@ -101,8 +101,9 @@ class App:
             self._running = False
 
     def on_loop(self, dt):
-        self._suspension.up(dt)
+        self._suspension.physics_update(dt)
         self._sprites.update(dt=dt)
+        self._suspension.plot_update()
         for it in self._gui:
             it.update()
 
@@ -134,8 +135,8 @@ class App:
             pygame_widgets.update(events)
             self.on_loop(dt=0.06)
             self.on_render()
-            # plt.draw()
-            # plt.pause(0.01)
+            plt.draw()
+            plt.pause(0.002)
         self.on_cleanup()
 
     def _change_track_generator(self, value):

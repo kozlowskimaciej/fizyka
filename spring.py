@@ -1,10 +1,4 @@
-from collections import deque
-
 import pygame
-import matplotlib.pyplot as plt
-import time
-
-import constants
 import globals
 
 
@@ -38,19 +32,6 @@ class Spring(pygame.sprite.Sprite):
         self.last_dx = self.dx
         self.dx_change = 0
 
-        self.start_time = time.time()
-
-        self.fig, (self.ax1, self.ax2) = plt.subplots(2, 1)
-        self.fig.canvas.manager.set_window_title("Car")
-        self.ax1.set_ylabel("Spring dx")
-        self.ax2.set_xlabel("Time (s)")
-        self.ax2.set_ylabel("Body y_cord")
-        self.data_len = 100
-        self.time_history = deque(maxlen=self.data_len)
-        self.dx_history = deque(maxlen=self.data_len)
-        self.body_y_cord_history = deque(maxlen=self.data_len)
-
-        plt.ion()
 
     @property
     def dx(self) -> float:
@@ -72,25 +53,7 @@ class Spring(pygame.sprite.Sprite):
             self.attch1.spring_attachment + self.attch2.spring_attachment - self.rect.h
         ) / 2
 
-        current_time = time.time() - self.start_time
-
-        self.time_history.append(current_time)
-        self.dx_history.append(self.dx)
-        self.body_y_cord_history.append(constants.GROUND_LEVEL - self.attch1.y_cord)
-
-        self.ax1.clear()
-        self.ax2.clear()
-
-        self.ax1.plot(self.time_history, self.dx_history)
-        self.ax1.set_ylim(0, self.max_length)
-        self.ax1.set_ylabel("Spring x position offset")
-
-        self.ax2.plot(self.time_history, self.body_y_cord_history)
-        self.ax2.set_ylim(0, constants.WINDOW_SIZE[1] * 1.25)
-        self.ax2.set_xlabel("Time (s)")
-        self.ax2.set_ylabel("Body y position")
-
-    def up(self, dt: float):
+    def physics_update(self, dt: float):
         tolerance = 10**-3
         assert 0 - tolerance <= self.dx <= self.max_length + tolerance, self.dx
 
