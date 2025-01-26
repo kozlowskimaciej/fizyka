@@ -1,3 +1,5 @@
+**Autorzy**: Maciej Kozłowski, Jakub Stacherski
+
 **Temat projektu**: Symulacja zawieszenia samochodowego
 
 **Cel**: Znalezienie optymalnych parametrów zawieszenia samochodu, poruszającego się w danym środowisku.
